@@ -1,0 +1,91 @@
+name: Create Fork
+
+on:
+  workflow_dispatch:
+    inputs:
+      upstream_repo:
+        description: "The upstream repository to fork (format: owner/repo)"
+        required: true
+      fork_name:
+        description: "The name for the fork (defaults to the upstream repo name)"
+        required: false
+      default_branch_only:
+        description: "Whether to fork only the default branch (true/false)"
+        required: false
+        default: "true"
+      fork_to_org:
+        description: "Select the organization to fork into"
+        required: true
+        type: choice
+        options:
+          - "G-Research"
+          - "armadaproject"
+          - "gr-oss-devops"
+          - "gr-oss-developers"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-fork:
+    runs-on: ubuntu-latest
+    if: (github.ref_name == 'dev' && contains(fromJson('["gr-oss-devops","gr-oss-developers"]'), github.event.inputs.fork_to_org)) || (github.ref_name == 'prod' && contains(fromJson('["G-Research","armadaproject"]'), github.event.inputs.fork_to_org))
+    environment: create-fork-${{ github.ref_name }}-${{ github.event.inputs.fork_to_org }}
+    steps:
+      - name: Generate GitHub App Token
+        uses: actions/create-github-app-token@v1
+        id: generate-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: ${{ github.event.inputs.fork_to_org }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+
+      - name: Parse and validate input
+        id: parse-upstream
+        uses: actions/github-script@v7
+        env:
+          UPSTREAM_REPO: ${{ github.event.inputs.upstream_repo }}
+          FORK_NAME: ${{ github.event.inputs.fork_name }}
+        with:
+          script: |
+            const upstreamRepo = process.env.UPSTREAM_REPO;
+            const forkNameInput = process.env.FORK_NAME;
+
+            if (!/^[-\w]+\/[-\w.]+$/.test(upstreamRepo)) {
+              throw new Error(`Invalid upstream_repo format: ${upstreamRepo}`);
+            }
+
+            const [, upstreamName] = upstreamRepo.split('/');
+            const forkName = forkNameInput || upstreamName;
+
+            if (!/^[-\w.]+$/.test(forkName)) {
+              throw new Error(`Invalid fork name: ${forkName}`);
+            }
+
+            core.setOutput('fork_name', forkName);
+
+      - name: Create fork using GitHub CLI
+        run: |
+          gh repo fork ${{ github.event.inputs.upstream_repo }} \
+          --default-branch-only=${{ github.event.inputs.default_branch_only }} \
+          --fork-name=${{ steps.parse-upstream.outputs.fork_name }} \
+          --org=${{ github.event.inputs.fork_to_org }} \
+          --clone=false
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+
+      - name: Trigger import workflow
+        run: |
+          gh workflow run import.yml \
+            --repo "${{ github.repository }}" \
+            --field repo_name="${{ steps.parse-upstream.outputs.fork_name }}" \
+            --field owner="${{ github.event.inputs.fork_to_org }}" \
+            --ref "${{ github.ref_name }}"
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
