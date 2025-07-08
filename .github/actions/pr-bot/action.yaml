@@ -31,12 +31,6 @@ runs:
         git commit -m "${{ inputs.commit-message }}"
         git push origin ${{ inputs.branch-name }}
 
-    - name: Authenticate GitHub CLI
-      shell: bash
-      run: gh auth login
-      env:
-        GH_TOKEN: ${{ inputs.github-token }}
-
     - name: Create Pull Request
       shell: bash
       run: gh pr create --title "${{ inputs.pr-title }}" --body "This is an automated PR." --base ${{ github.ref_name }} --head ${{ inputs.branch-name }} # TODO verify if base branch is correct
