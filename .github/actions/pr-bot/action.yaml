@@ -25,6 +25,7 @@ runs:
     - name: Push changes
       shell: bash
       run: |
+        cd feature/github-repo-provisioning/repo_configs
         git checkout -b ${{ inputs.branch-name }}
         git add .
         git commit -m "${{ inputs.commit-message }}"
