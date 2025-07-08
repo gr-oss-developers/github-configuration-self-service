@@ -16,6 +16,11 @@ on:
         description: "GCSS ref to checkout"
         required: false
         default: "main"
+    secrets:
+      APP_PRIVATE_KEY:
+          required: true
+      GITHUB_TOKEN:
+          required: true
 
 permissions:
   contents: write

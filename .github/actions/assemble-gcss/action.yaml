@@ -16,7 +16,7 @@ runs:
         path: feature/github-repo-provisioning/gcss_config
         ref: ${{ github.sha }}
 
-    - name: Debug
+    - name: Debug # TODO remove
       shell: bash
       run: |
         echo ${GITHUB_WORKSPACE}
