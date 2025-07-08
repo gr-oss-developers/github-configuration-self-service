@@ -66,7 +66,7 @@ jobs:
         with:
           working-directory: feature/github-repo-importer
           source-directory: "../github-repo-provisioning/importer_tmp_dir/"
-          target-directory: "../github-repo-provisioning/repo_configs/${{ github.ref_name }}/${{ inputs.owner }}"
+          target-directory: "../github-repo-provisioning/repo_configs/dev/${{ inputs.owner }}" # TODO fix hardcoded environment directory
 
       - name: Create Pull Request
         uses: ./.github/actions/pr-bot
