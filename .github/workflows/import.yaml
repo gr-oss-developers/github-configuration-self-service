@@ -43,6 +43,7 @@ jobs:
         with:
           environment: dev # TODO
           organisation: ${{ inputs.owner }} # TODO
+          gh_token: ${{ secrets.gh_token }}
 
       - name: Setup Just
         uses: extractions/setup-just@v2

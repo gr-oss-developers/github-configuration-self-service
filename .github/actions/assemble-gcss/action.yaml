@@ -7,6 +7,8 @@ inputs:
   organisation:
     description: "Organisation for which the GCSS is assembled"
     required: true
+  gh_token:
+    required: true
 runs:
   using: "composite"
   steps:
@@ -15,6 +17,7 @@ runs:
       with:
         path: feature/github-repo-provisioning/gcss_config
         ref: ${{ github.sha }}
+        token: ${{ inputs.gh_token }}
 
     - name: Debug # TODO remove
       shell: bash
