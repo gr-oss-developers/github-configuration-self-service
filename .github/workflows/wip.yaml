@@ -1,0 +1,15 @@
+name: Reusable workflow
+
+on:
+  workflow_call:
+
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug
+        run: |
+          echo ${GITHUB_WORKSPACE}
+          ls -la 
+          pwd
