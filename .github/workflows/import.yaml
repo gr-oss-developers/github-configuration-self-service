@@ -21,23 +21,19 @@ jobs:
   import-repo:
     runs-on: ubuntu-latest
     name: Import repository
-#    environment: import-${{ github.ref_name }}-${{ github.event.inputs.owner }}
     environment: import
-#    permissions:
-#      contents: write
-#      pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          repository: gr-oss-developers/github-configuration-self-service
-          ref: ${{ inputs.gcss-ref }}
+          repository: gr-oss-developers/github-configuration-self-service # TODO
+          ref: ${{ inputs.gcss_ref }}
 
       - name: Assemble GCSS
         uses: ./.github/actions/assemble-gcss
         with:
-          environment: ${{ env.ENVIRONMENT }}
-          organisation: ${{ env.ORG }}
+          environment: dev # TODO
+          organisation: ${{ inputs.owner }} # TODO
 
       - name: Setup Just
         uses: extractions/setup-just@v2
@@ -50,14 +46,14 @@ jobs:
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
-          owner: ${{ github.event.inputs.owner }}
+          owner: ${{ inputs.owner }}
 
       - name: Setup vars
         id: setup-vars
         run: |
           date_suffix=$(date +%Y%m%d)
-          echo "full_repo_name=${{ github.event.inputs.owner }}/${{ github.event.inputs.repo_name }}" >> $GITHUB_OUTPUT
-          echo "automation_branch_name=import/${{ github.ref_name }}/${{ github.event.inputs.owner }}/${{ github.event.inputs.repo_name }}/$date_suffix" >> $GITHUB_OUTPUT 
+          echo "full_repo_name=${{ inputs.owner }}/${{ inputs.repo_name }}" >> $GITHUB_OUTPUT
+          echo "automation_branch_name=import/${{ github.ref_name }}/${{ inputs.owner }}/${{ inputs.repo_name }}/$date_suffix" >> $GITHUB_OUTPUT 
 
       - name: Import repo
         working-directory: feature/github-repo-importer
@@ -70,7 +66,7 @@ jobs:
         with:
           working-directory: feature/github-repo-importer
           source-directory: "../github-repo-provisioning/importer_tmp_dir/"
-          target-directory: "../github-repo-provisioning/repo_configs/${{ github.ref_name }}/${{ github.event.inputs.owner }}"
+          target-directory: "../github-repo-provisioning/repo_configs/${{ github.ref_name }}/${{ inputs.owner }}"
 
       - name: Create Pull Request
         uses: ./.github/actions/pr-bot
