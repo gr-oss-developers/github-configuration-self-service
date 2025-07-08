@@ -33,7 +33,7 @@ runs:
 
     - name: Authenticate GitHub CLI
       shell: bash
-      run: gh auth login --with-token
+      run: gh auth login
       env:
         GH_TOKEN: ${{ inputs.github-token }}
 
