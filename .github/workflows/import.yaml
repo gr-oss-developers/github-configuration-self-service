@@ -17,9 +17,9 @@ on:
         required: false
         default: "main"
     secrets:
-      APP_PRIVATE_KEY:
+      app_private_key:
           required: true
-      GITHUB_TOKEN:
+      github_token:
           required: true
 
 permissions:
@@ -54,7 +54,7 @@ jobs:
         id: generate-token
         with:
           app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          private-key: ${{ secrets.app_private_key }}
           owner: ${{ inputs.owner }}
 
       - name: Setup vars
@@ -83,4 +83,4 @@ jobs:
           branch-name: ${{ steps.setup-vars.outputs.automation_branch_name }}
           pr-title: "Import dev/${{ steps.setup-vars.outputs.full_repo_name }}" # TODO fix hardcoded environment directory
           commit-message: "Auto-generated changes. Import dev/${{ steps.setup-vars.outputs.full_repo_name }} repository" # TODO fix hardcoded environment directory
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.github_token }}
