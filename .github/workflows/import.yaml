@@ -1,7 +1,7 @@
 name: Import repo pipeline
 
 on:
-  workflow_dispatch:
+  workflow_call:
     inputs:
       repo_name:
         description: 'The name of the repository to import'
