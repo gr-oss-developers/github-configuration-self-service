@@ -2,6 +2,12 @@ name: Reusable workflow
 
 on:
   workflow_call:
+    inputs:
+      gcss-ref:
+        type: string
+        description: "GCSS ref to checkout"
+        required: false
+        default: "main"
 
 env:
   ENVIRONMENT: dev
@@ -16,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: gr-oss-developers/github-configuration-self-service
-          ref: main
+          ref: ${{ inputs.gcss-ref }}
 
       - name: Create dir structure
         run: mkdir -p feature/github-repo-provisioning/repo_configs/${{ env.ENVIRONMENT }}/${{ env.ORG }}
