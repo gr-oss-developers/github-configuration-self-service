@@ -23,9 +23,9 @@ jobs:
     name: Import repository
 #    environment: import-${{ github.ref_name }}-${{ github.event.inputs.owner }}
     environment: import
-    permissions:
-      contents: write
-      pull-requests: write
+#    permissions:
+#      contents: write
+#      pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
