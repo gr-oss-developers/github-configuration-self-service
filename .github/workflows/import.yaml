@@ -53,7 +53,7 @@ jobs:
         run: |
           date_suffix=$(date +%Y%m%d)
           echo "full_repo_name=${{ inputs.owner }}/${{ inputs.repo_name }}" >> $GITHUB_OUTPUT
-          echo "automation_branch_name=import/${{ github.ref_name }}/${{ inputs.owner }}/${{ inputs.repo_name }}/$date_suffix" >> $GITHUB_OUTPUT 
+          echo "automation_branch_name=import/dev/${{ inputs.owner }}/${{ inputs.repo_name }}/$date_suffix" >> $GITHUB_OUTPUT # TODO fix hardcoded environment directory 
 
       - name: Import repo
         working-directory: feature/github-repo-importer
@@ -72,6 +72,6 @@ jobs:
         uses: ./.github/actions/pr-bot
         with:
           branch-name: ${{ steps.setup-vars.outputs.automation_branch_name }}
-          pr-title: "Import ${{ github.ref_name }}/${{ steps.setup-vars.outputs.full_repo_name }}"
-          commit-message: "Auto-generated changes. Import ${{ github.ref_name }}/${{ steps.setup-vars.outputs.full_repo_name }} repository"
+          pr-title: "Import dev/${{ steps.setup-vars.outputs.full_repo_name }}" # TODO fix hardcoded environment directory
+          commit-message: "Auto-generated changes. Import dev/${{ steps.setup-vars.outputs.full_repo_name }} repository" # TODO fix hardcoded environment directory
           github-token: ${{ secrets.GITHUB_TOKEN }}
