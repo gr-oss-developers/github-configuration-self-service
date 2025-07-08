@@ -19,7 +19,7 @@ on:
     secrets:
       app_private_key:
           required: true
-      github_token:
+      gh_token:
           required: true
 
 permissions:
@@ -83,4 +83,4 @@ jobs:
           branch-name: ${{ steps.setup-vars.outputs.automation_branch_name }}
           pr-title: "Import dev/${{ steps.setup-vars.outputs.full_repo_name }}" # TODO fix hardcoded environment directory
           commit-message: "Auto-generated changes. Import dev/${{ steps.setup-vars.outputs.full_repo_name }} repository" # TODO fix hardcoded environment directory
-          github-token: ${{ secrets.github_token }}
+          github-token: ${{ secrets.gh_token }}
