@@ -1,11 +1,7 @@
 name: "Assemble GCSS"
 description: "Action that assembles GCSS dir structure"
 inputs:
-  gcss-ref:
-    description: "GCSS ref to checkout"
-    required: false
-    default: "main"
-  environement:
+  environment:
     description: "Environment for which the GCSS is assembled"
     required: true
   organisation:
@@ -14,12 +10,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Checkout code configuration
-      uses: actions/checkout@v4
-      with:
-        repository: gr-oss-developers/github-configuration-self-service
-        ref: ${{ inputs.gcss-ref }}
-
     - name: Create dir structure
       id: create-dir-structure
       shell: bash
@@ -40,4 +30,4 @@ runs:
         echo ${GITHUB_WORKSPACE}
         ls -la
         ls -la feature/github-repo-provisioning/repo_configs
-        ls -la feature/github-repo-provisioning/repo_configs/${{ env.ENVIRONMENT }}/${{ env.ORG }}
+        ls -la ${{ steps.create-dir-structure.outputs.path }}
