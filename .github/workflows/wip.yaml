@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     name: WIP
     steps:
-      - name: Checkout code configuration
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           repository: gr-oss-developers/github-configuration-self-service
