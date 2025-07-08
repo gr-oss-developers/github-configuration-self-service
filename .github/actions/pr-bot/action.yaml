@@ -25,8 +25,6 @@ runs:
     - name: Push changes
       shell: bash
       run: |
-        cd feature/github-repo-provisioning/repo_configs/dev/gr-oss-developers
-        ls -la
         git checkout -b ${{ inputs.branch-name }}
         git add .
         git commit -m "${{ inputs.commit-message }}"

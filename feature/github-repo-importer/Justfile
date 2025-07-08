@@ -2,17 +2,13 @@ import-repo repoName:
   #!/usr/bin/env bash
   go run main.go import {{repoName}}
   IFS='/' read -r owner repo <<< {{repoName}}
-  mkdir -p "../../feature/github-repo-provisioning/importer_tmp_dir/$owner/"
-  cp "configs/$owner/$repo.yaml" "../../feature/github-repo-provisioning/importer_tmp_dir/$owner/"
-
-remove-imported-repo:
-  terraform state rm module.repository.github_repository.repository
-  terraform state rm 'module.repository.github_branch_default.default[0]'
+  mkdir -p "../../feature/github-repo-provisioning/gcss_config/importer_tmp_dir/"
+  cp "configs/$owner/$repo.yaml" "../../feature/github-repo-provisioning/gcss_config/importer_tmp_dir/"
 
 import-repos:
   go run main.go bulk-import -c import-config.yaml
-  mkdir -p "../../feature/github-repo-provisioning/importer_tmp_dir/$OWNER/"
-  find configs/"$OWNER" -maxdepth 1 -type f \( -name "*.yaml" -o -name ".*.yaml" \) -print -exec cp {} "../../feature/github-repo-provisioning/importer_tmp_dir/$OWNER/" \;
+  mkdir -p "../../feature/github-repo-provisioning/gcss_config/importer_tmp_dir/"
+  find configs/"$OWNER" -maxdepth 1 -type f \( -name "*.yaml" -o -name ".*.yaml" \) -print -exec cp {} "../../feature/github-repo-provisioning/gcss_config/importer_tmp_dir/" \;
 
 test:
   go test ./...

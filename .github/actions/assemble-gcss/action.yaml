@@ -10,18 +10,10 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Create dir structure
-      id: create-dir-structure
-      shell: bash
-      run: |
-        path=feature/github-repo-provisioning/repo_configs/${{ inputs.environment }}/${{ inputs.organisation }}
-        mkdir -p $path
-        echo "path=$path" >> $GITHUB_OUTPUT
-
-    - name: Checkout code configuration
+    - name: Checkout configuration
       uses: actions/checkout@v4
       with:
-        path: ${{ steps.create-dir-structure.outputs.path }}
+        path: feature/github-repo-provisioning/gcss_config
         ref: ${{ github.sha }}
 
     - name: Debug
@@ -29,5 +21,4 @@ runs:
       run: |
         echo ${GITHUB_WORKSPACE}
         ls -la
-        ls -la feature/github-repo-provisioning/repo_configs
-        ls -la ${{ steps.create-dir-structure.outputs.path }}
+        ls -la feature/github-repo-provisioning/gcss_config

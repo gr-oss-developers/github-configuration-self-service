@@ -21,21 +21,21 @@ provider "github" {
 locals {
   generated_repos = merge(
     {
-      for file_path in fileset(path.module, format("importer_tmp_dir/%s/*.yaml", var.owner)) :
+      for file_path in fileset(path.module, "../../gcss_config/importer_tmp_dir/*.yaml") :
       split(".yaml", basename(file_path))[0] => yamldecode(file(file_path))
     },
     {
-      for file_path in fileset(path.module, format("importer_tmp_dir/%s/*.yml", var.owner)) :
+      for file_path in fileset(path.module, "../../gcss_config/importer_tmp_dir/*.yml") :
       split(".yml", basename(file_path))[0] => yamldecode(file(file_path))
     }
   )
   new_repos = merge(
     {
-      for file_path in fileset(path.module, format("repo_configs/%s/%s/*.yaml", var.environment_directory, var.owner)) :
+      for file_path in fileset(path.module, "../../gcss_config/*.yaml") :
       split(".yaml", basename(file_path))[0] => yamldecode(file(file_path))
     },
     {
-      for file_path in fileset(path.module, format("repo_configs/%s/%s/*.yml", var.environment_directory, var.owner)) :
+      for file_path in fileset(path.module, "../../gcss_config/*.yml") :
       split(".yml", basename(file_path))[0] => yamldecode(file(file_path))
     }
   )
@@ -170,7 +170,7 @@ import {
 
 
 module "repository" {
-  source                  = "./modules/terraform-github-repository"
+  source                  = "moduleserraform-github-repository"
   for_each                = local.all_repos
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

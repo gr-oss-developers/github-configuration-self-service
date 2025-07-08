@@ -23,7 +23,7 @@ jobs:
     name: Import repository
     environment: import
     steps:
-      - name: Checkout
+      - name: Checkout GCSS
         uses: actions/checkout@v4
         with:
           repository: gr-oss-developers/github-configuration-self-service # TODO
@@ -65,8 +65,8 @@ jobs:
         uses: ./.github/actions/compare
         with:
           working-directory: feature/github-repo-importer
-          source-directory: "../github-repo-provisioning/importer_tmp_dir/"
-          target-directory: "../github-repo-provisioning/repo_configs/dev/${{ inputs.owner }}" # TODO fix hardcoded environment directory
+          source-directory: "../github-repo-provisioning/gcss_config/importer_tmp_dir/"
+          target-directory: "../github-repo-provisioning/gcss_config/"
 
       - name: Create Pull Request
         uses: ./.github/actions/pr-bot
