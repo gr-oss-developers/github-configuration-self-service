@@ -30,6 +30,8 @@ runs:
         git add .
         git commit -m "${{ inputs.commit-message }}"
         git push origin ${{ inputs.branch-name }}
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
 
     - name: Create Pull Request
       shell: bash
