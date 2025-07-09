@@ -1,6 +1,8 @@
 terraform {
   required_version = "~> 1.0"
 
+  cloud {}
+
   required_providers {
     github = {
       source = "app.terraform.io/GR-OSS/github"
@@ -170,7 +172,7 @@ import {
 
 
 module "repository" {
-  source                  = "moduleserraform-github-repository"
+  source                  = "./modules/terraform-github-repository"
   for_each                = local.all_repos
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -381,7 +383,7 @@ locals {
   }
 
   apps_map = {
-    for app in yamldecode(file("../github-repo-importer/app-list.yaml")).apps :
+    for app in yamldecode(file("./app-list.yaml")).apps :
     "app/${app.app_owner}/${app.app_slug}" => {
       app_id = app.app_id
     }

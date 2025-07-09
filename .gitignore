@@ -37,9 +37,10 @@ override.tf.json
 terraform.rc
 .idea
 
-feature/github-repo-provisioning/.terraform.lock.hcl
-feature/github-repo-provisioning/.terraform
-feature/github-repo-provisioning/.terraform/*
+feature/github-repo-provisioning/terraform/.terraform.lock.hcl
+feature/github-repo-provisioning/terraform/.terraform
+feature/github-repo-provisioning/terraform/.terraform/*
+feature/github-repo-provisioning/terraform/app-list.yaml
 
 feature/github-repo-importer/dumps/*
 feature/github-repo-importer/configs/*
