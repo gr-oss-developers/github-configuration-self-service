@@ -53,16 +53,17 @@ jobs:
       - name: Run Terraform init
         working-directory: feature/github-repo-provisioning/terraform
         run: terraform init -input=false
-#        env:
-#          TF_CLOUD_ORGANIZATION: "GR-OSS"
-#          TF_WORKSPACE: ${{ vars.WORKSPACE }}
+        env:
+          TF_TOKEN_app_terraform_io: ${{ secrets.TFC_TOKEN }}
+          TF_CLOUD_ORGANIZATION: "GR-OSS"
+          TF_WORKSPACE: ${{ vars.WORKSPACE }}
 
       - name: Run Terraform plan
         id: plan
         working-directory: feature/github-repo-provisioning/terraform
-#        env:
-#          TF_CLOUD_ORGANIZATION: "GR-OSS"
-#          TF_WORKSPACE: ${{ vars.WORKSPACE }}
+        env:
+          TF_CLOUD_ORGANIZATION: "GR-OSS"
+          TF_WORKSPACE: ${{ vars.WORKSPACE }}
         run: terraform plan -no-color -input=false
 
       - run: echo ${{ steps.plan.outputs.stdout }}
