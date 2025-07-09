@@ -46,20 +46,21 @@ jobs:
         run: cp feature/github-repo-importer/app-list.yaml feature/github-repo-provisioning/terraform/app-list.yaml
 
       - name: Setup Terraform
+        working-directory: feature/github-repo-provisioning/terraform
         uses: hashicorp/setup-terraform@v3
         with:
           cli_config_credentials_token: ${{ secrets.TFC_TOKEN }}
 
       - name: Run Terraform login
         working-directory: feature/github-repo-provisioning/terraform
-        run: terraform login
+        run: terraform login -input=false
         env:
           TF_CLOUD_ORGANIZATION: "GR-OSS"
           TF_WORKSPACE: ${{ vars.WORKSPACE }}
 
       - name: Run Terraform init
         working-directory: feature/github-repo-provisioning/terraform
-        run: terraform init
+        run: terraform init -input=false
         env:
           TF_CLOUD_ORGANIZATION: "GR-OSS"
           TF_WORKSPACE: ${{ vars.WORKSPACE }}
@@ -70,7 +71,7 @@ jobs:
         env:
           TF_CLOUD_ORGANIZATION: "GR-OSS"
           TF_WORKSPACE: ${{ vars.WORKSPACE }}
-        run: terraform plan
+        run: terraform plan -no-color -input=false
 
       - run: echo ${{ steps.plan.outputs.stdout }}
       - run: echo ${{ steps.plan.outputs.stderr }}
