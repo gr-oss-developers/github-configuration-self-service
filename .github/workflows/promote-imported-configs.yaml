@@ -16,6 +16,11 @@ on:
         type: string
         description: 'The pull request number to promote'
         required: true
+    secrets:
+      app_private_key:
+        required: true
+      gh_token:
+        required: true
 
 jobs:
   promote:
@@ -29,7 +34,7 @@ jobs:
         id: generate-token
         with:
           app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          private-key: ${{ secrets.app_private_key }}
           owner: "gr-oss-developers"
 
       - name: Checkout GCSS
@@ -44,6 +49,7 @@ jobs:
         with:
           path: feature/github-repo-provisioning/gcss_config
           ref: ${{ github.sha }}
+          token: ${{ secrets.gh_token }}
 
       - name: Copy GH app mapping
         run: cp feature/github-repo-importer/app-list.yaml feature/github-repo-provisioning/app-list.yaml
@@ -68,7 +74,7 @@ jobs:
           TF_WORKSPACE: ${{ vars.WORKSPACE }}
         run: terraform plan -no-color -input=false -detailed-exitcode
 
-      - name: Rune Terraform apply
+      - name: Run Terraform apply
         if: steps.plan.outputs.exitcode == '2'
         working-directory: feature/github-repo-provisioning
         env:
