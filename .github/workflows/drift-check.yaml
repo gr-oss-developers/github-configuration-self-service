@@ -42,7 +42,7 @@ jobs:
           ref: ${{ github.sha }}
 
       - name: Copy GH app mapping
-        run: cp feature/github-repo-importer/app-list.yaml feature/github-repo-provisioning/terraform/app-list.yaml
+        run: cp feature/github-repo-importer/app-list.yaml feature/github-repo-provisioning/app-list.yaml
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -57,7 +57,7 @@ jobs:
           echo "description: This is a test" > repo1.yaml
 
       - name: Run Terraform init
-        working-directory: feature/github-repo-provisioning/terraform
+        working-directory: feature/github-repo-provisioning
         run: terraform init -input=false
         env:
           TF_CLOUD_ORGANIZATION: "GR-OSS"
@@ -65,7 +65,7 @@ jobs:
 
       - name: Run Terraform plan
         id: plan
-        working-directory: feature/github-repo-provisioning/terraform
+        working-directory: feature/github-repo-provisioning
         env:
           TF_CLOUD_ORGANIZATION: "GR-OSS"
           TF_WORKSPACE: ${{ vars.WORKSPACE }}

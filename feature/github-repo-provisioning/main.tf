@@ -23,21 +23,21 @@ provider "github" {
 locals {
   generated_repos = merge(
     {
-      for file_path in fileset(path.module, "../../gcss_config/importer_tmp_dir/*.yaml") :
+      for file_path in fileset(path.module, "gcss_config/importer_tmp_dir/*.yaml") :
       split(".yaml", basename(file_path))[0] => yamldecode(file(file_path))
     },
     {
-      for file_path in fileset(path.module, "../../gcss_config/importer_tmp_dir/*.yml") :
+      for file_path in fileset(path.module, "gcss_config/importer_tmp_dir/*.yml") :
       split(".yml", basename(file_path))[0] => yamldecode(file(file_path))
     }
   )
   new_repos = merge(
     {
-      for file_path in fileset(path.module, "../../gcss_config/*.yaml") :
+      for file_path in fileset(path.module, "gcss_config/*.yaml") :
       split(".yaml", basename(file_path))[0] => yamldecode(file(file_path))
     },
     {
-      for file_path in fileset(path.module, "../../gcss_config/*.yml") :
+      for file_path in fileset(path.module, "gcss_config/*.yml") :
       split(".yml", basename(file_path))[0] => yamldecode(file(file_path))
     }
   )
