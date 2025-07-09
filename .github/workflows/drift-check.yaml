@@ -54,7 +54,7 @@ jobs:
         working-directory: feature/github-repo-provisioning/terraform
         run: terraform init -input=false
         env:
-          TF_TOKEN_app_terraform_io: ${{ secrets.TFC_TOKEN }}
+          TF_API_TOKEN: ${{ secrets.TFC_TOKEN }}
           TF_CLOUD_ORGANIZATION: "GR-OSS"
           TF_WORKSPACE: ${{ vars.WORKSPACE }}
 
