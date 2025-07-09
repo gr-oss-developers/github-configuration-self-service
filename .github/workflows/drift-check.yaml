@@ -69,8 +69,9 @@ jobs:
         env:
           TF_CLOUD_ORGANIZATION: "GR-OSS"
           TF_WORKSPACE: ${{ vars.WORKSPACE }}
-        run: terraform plan -no-color -input=false
+        run: terraform plan -no-color -input=false -detailed-exitcode
 
+        # 0 for no changes,
       - run: echo ${{ steps.plan.outputs.exitcode }}
 
 #      - name: Run Terraform Cloud drift check
