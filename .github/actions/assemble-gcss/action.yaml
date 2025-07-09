@@ -8,6 +8,7 @@ inputs:
     description: "Organisation for which the GCSS is assembled"
     required: true
   gh_token:
+    description: "GitHub token to use for checking out the GCSS configuration"
     required: true
 runs:
   using: "composite"
