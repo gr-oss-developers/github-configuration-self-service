@@ -46,7 +46,6 @@ jobs:
         run: cp feature/github-repo-importer/app-list.yaml feature/github-repo-provisioning/terraform/app-list.yaml
 
       - name: Setup Terraform
-        working-directory: feature/github-repo-provisioning/terraform
         uses: hashicorp/setup-terraform@v3
         with:
           cli_config_credentials_token: ${{ secrets.TFC_TOKEN }}
