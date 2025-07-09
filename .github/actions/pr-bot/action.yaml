@@ -31,9 +31,6 @@ runs:
         git commit -m "${{ inputs.commit-message }}"
         git push origin ${{ inputs.branch-name }}
 
-    - name: Dump context
-      uses: crazy-max/ghaction-dump-context@v2
-
     - name: Create Pull Request
       shell: bash
       run: gh pr create --title "${{ inputs.pr-title }}" --body "This is an automated PR." --base ${{ github.ref_name }} --head ${{ inputs.branch-name }} --repo ${{ github.repository }}
