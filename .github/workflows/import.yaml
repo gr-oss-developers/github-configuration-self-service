@@ -16,10 +16,6 @@ on:
         description: "GCSS ref to checkout"
         required: false
         default: "main"
-      app_id:
-        type: string
-        description: "GitHub App ID"
-        required: true
     secrets:
       app_private_key:
           required: true
@@ -58,7 +54,7 @@ jobs:
         uses: actions/create-github-app-token@v1
         id: generate-token
         with:
-          app-id: ${{ inputs.app_id }}
+          app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.app_private_key }}
           owner: ${{ inputs.owner }}
 
