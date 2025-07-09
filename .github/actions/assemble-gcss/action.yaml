@@ -19,6 +19,7 @@ runs:
         path: feature/github-repo-provisioning/gcss_config
         ref: ${{ github.sha }}
         token: ${{ inputs.gh_token }}
+        persist-credentials: false
 
     - name: Debug # TODO remove
       shell: bash
