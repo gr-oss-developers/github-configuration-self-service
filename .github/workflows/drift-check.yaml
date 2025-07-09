@@ -3,24 +3,11 @@ name: "Terraform Cloud Drift Check"
 on:
   workflow_call:
     inputs:
-#      repo_name:
-#        type: string
-#        description: 'The name of the repository to import'
-#        required: true
-#      owner:
-#        type: string
-#        description: 'The owner of the repository to import'
-#        required: true
       gcss_ref:
         type: string
         description: "GCSS ref to checkout"
         required: false
         default: "main"
-#    secrets:
-#      app_private_key:
-#        required: true
-#      gh_token:
-#        required: true
 
 jobs:
   drift-check:
@@ -71,22 +58,12 @@ jobs:
           TF_WORKSPACE: ${{ vars.WORKSPACE }}
         run: terraform plan -no-color -input=false -detailed-exitcode
 
-        # 0 for no changes,
-      - run: echo ${{ steps.plan.outputs.exitcode }}
-
-#      - name: Run Terraform Cloud drift check
-#        id: drift
-#        uses: ./.github/actions/drift-detector
-#        with:
-#          tfc-token: ${{ secrets.TFC_TOKEN }}
-#          workspace-id: ${{ vars.WORKSPACE_ID }}
-#          polling-interval: 30
-#
-#      - name: Inspect drift
-#        run: |
-#          if [[ "${{ steps.drift.outputs.drift }}" == "true" ]]; then
-#            echo "Drift detected!"
-#            exit 1
-#          else
-#            echo "No drift detected."
-#          fi
+        # 0 for green plan no changes, 2 for green plan with changes
+      - name: Inspect drift
+        run: |
+          if [[ "${{ steps.plan.outputs.exitcode }}" == 2 ]]; then
+            echo "Drift detected!"
+            exit 1
+          else
+            echo "No drift detected."
+          fi
