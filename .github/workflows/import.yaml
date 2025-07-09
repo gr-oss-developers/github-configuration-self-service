@@ -37,13 +37,14 @@ jobs:
         with:
           repository: gr-oss-developers/github-configuration-self-service # TODO
           ref: ${{ inputs.gcss_ref }}
+          persist-credentials: false
 
       - name: Assemble GCSS
         uses: ./.github/actions/assemble-gcss
         with:
           environment: dev # TODO
           organisation: ${{ inputs.owner }} # TODO
-#          gh_token: ${{ secrets.gh_token }}
+          gh_token: ${{ secrets.gh_token }}
 
       - name: Setup Just
         uses: extractions/setup-just@v2
