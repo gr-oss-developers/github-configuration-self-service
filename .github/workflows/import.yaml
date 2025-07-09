@@ -16,6 +16,10 @@ on:
         description: "GCSS ref to checkout"
         required: false
         default: "main"
+      app_id:
+        type: string
+        description: "GitHub App ID"
+        required: true
     secrets:
       app_private_key:
           required: true
@@ -43,7 +47,7 @@ jobs:
         with:
           environment: dev # TODO
           organisation: ${{ inputs.owner }} # TODO
-          gh_token: ${{ secrets.gh_token }}
+#          gh_token: ${{ secrets.gh_token }}
 
       - name: Setup Just
         uses: extractions/setup-just@v2
@@ -54,7 +58,7 @@ jobs:
         uses: actions/create-github-app-token@v1
         id: generate-token
         with:
-          app-id: ${{ vars.APP_ID }}
+          app-id: ${{ inputs.app_id }}
           private-key: ${{ secrets.app_private_key }}
           owner: ${{ inputs.owner }}
 
@@ -63,7 +67,7 @@ jobs:
         run: |
           date_suffix=$(date +%Y%m%d)
           echo "full_repo_name=${{ inputs.owner }}/${{ inputs.repo_name }}" >> $GITHUB_OUTPUT
-          echo "automation_branch_name=import/dev/${{ inputs.owner }}/${{ inputs.repo_name }}/$date_suffix" >> $GITHUB_OUTPUT # TODO fix hardcoded environment directory 
+          echo "automation_branch_name=import/${{ inputs.owner }}/${{ inputs.repo_name }}/$date_suffix" >> $GITHUB_OUTPUT 
 
       - name: Import repo
         working-directory: feature/github-repo-importer
@@ -82,6 +86,6 @@ jobs:
         uses: ./.github/actions/pr-bot
         with:
           branch-name: ${{ steps.setup-vars.outputs.automation_branch_name }}
-          pr-title: "Import dev/${{ steps.setup-vars.outputs.full_repo_name }}" # TODO fix hardcoded environment directory
-          commit-message: "Auto-generated changes. Import dev/${{ steps.setup-vars.outputs.full_repo_name }} repository" # TODO fix hardcoded environment directory
+          pr-title: "Import ${{ steps.setup-vars.outputs.full_repo_name }}"
+          commit-message: "Auto-generated changes. Import ${{ steps.setup-vars.outputs.full_repo_name }} repository"
           github-token: ${{ secrets.gh_token }}
