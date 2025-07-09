@@ -90,13 +90,14 @@ jobs:
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           
       - name: Checkout target branch
+        working-directory: feature/github-repo-provisioning/gcss_config
         run: git checkout -B "${{ github.ref_name }}"
 
       - name: Promote Sanitized Files
-        working-directory: feature/github-repo-provisioning
+        working-directory: feature/github-repo-provisioning/gcss_config
         run: |
-          src="gcss_config/importer_tmp_dir"
-          dst="gcss_config"
+          src="importer_tmp_dir"
+          dst="."
         
           if [[ -d "$src" ]]; then
             echo "Promoting configs from $src to $dst"
