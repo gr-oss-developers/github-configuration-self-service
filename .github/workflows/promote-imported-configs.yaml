@@ -1,15 +1,24 @@
 name: Promote Imported Configs
 
 on:
-  pull_request:
-    types: [closed]
-    branches: [ prod, dev ]
-    paths:
-      - 'feature/github-repo-provisioning/importer_tmp_dir/**'
+  workflow_call:
+    inputs:
+      commit_sha:
+        type: string
+        description: 'The commit SHA to promote'
+        required: true
+      gcss_ref:
+        type: string
+        description: "GCSS ref to checkout"
+        required: false
+        default: "main"
+      pr_number:
+        type: string
+        description: 'The pull request number to promote'
+        required: true
 
 jobs:
   promote:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     environment: promote
     permissions:
@@ -21,16 +30,53 @@ jobs:
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
-          owner: "G-Research"
+          owner: "gr-oss-developers"
 
-      - name: Checkout
+      - name: Checkout GCSS
         uses: actions/checkout@v4
         with:
-          token: ${{ steps.generate-token.outputs.token }}
-          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          repository: gr-oss-developers/github-configuration-self-service
+          ref: ${{ inputs.gcss_ref }}
+          persist-credentials: false
+
+      - name: Checkout configuration repo
+        uses: actions/checkout@v4
+        with:
+          path: feature/github-repo-provisioning/gcss_config
+          ref: ${{ github.sha }}
+
+      - name: Copy GH app mapping
+        run: cp feature/github-repo-importer/app-list.yaml feature/github-repo-provisioning/app-list.yaml
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          cli_config_credentials_token: ${{ secrets.TFC_TOKEN }}
+
+      - name: Run Terraform init
+        working-directory: feature/github-repo-provisioning
+        run: terraform init -input=false
+        env:
+          TF_CLOUD_ORGANIZATION: "GR-OSS"
+          TF_WORKSPACE: ${{ vars.WORKSPACE }}
+
+      - name: Run Terraform plan
+        id: plan
+        working-directory: feature/github-repo-provisioning
+        env:
+          TF_CLOUD_ORGANIZATION: "GR-OSS"
+          TF_WORKSPACE: ${{ vars.WORKSPACE }}
+        run: terraform plan -no-color -input=false -detailed-exitcode
+
+      - name: Rune Terraform apply
+        if: steps.plan.outputs.exitcode == '2'
+        working-directory: feature/github-repo-provisioning
+        env:
+          TF_CLOUD_ORGANIZATION: "GR-OSS"
+          TF_WORKSPACE: ${{ vars.WORKSPACE }}
+        run: terraform apply -no-color -input=false -auto-approve
 
       - name: Configure git
-        shell: bash
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
@@ -40,42 +86,26 @@ jobs:
 
       - name: Promote Sanitized Files
         working-directory: feature/github-repo-provisioning
-        env:
-          DEV_TARGETS: 'gr-oss-devops gr-oss-developers'
-          PROD_TARGETS: 'G-Research armadaproject'
         run: |
-          if [[ "${{ github.ref_name }}" == "dev" ]]; then
-            IFS=' ' read -r -a targets <<< "${DEV_TARGETS}"
-            target_env="dev"
-          elif [[ "${{ github.ref_name }}" == "prod" ]]; then
-            IFS=' ' read -r -a targets <<< "${PROD_TARGETS}"
-            target_env="prod"
+          src="gcss_config/importer_tmp_dir"
+          dst="gcss_config"
+        
+          if [[ -d "$src" ]]; then
+            echo "Promoting configs from $src to $dst"
+            mkdir -p "$dst"
+        
+            find "$src" -type f -name '*.yaml' | while read file; do
+              yq '. |= ( with(select(.rulesets[] != null); .rulesets[] |= del(.id)) | with(select(.rulesets[] == null); .) )' -i $file
+            done
+
+            find "$src" -maxdepth 1 -type f \( -name "*.yaml" -o -name ".*.yaml" \) -print -exec mv {} "$dst" \;
+            git add "$src" "$dst"
           else
-            echo "Unsupported branch: ${{ github.ref_name }}"
-            exit 1
+            echo "Source dir $src not found, skipping"
           fi
-
-          for org in "${targets[@]}"; do
-            src="importer_tmp_dir/${org}"
-            dst="repo_configs/${target_env}/${org}"
           
-            if [[ -d "$src" ]]; then
-              echo "Promoting configs from $src to $dst"
-              mkdir -p "$dst"
-          
-              find "$src" -type f -name '*.yaml' | while read file; do
-                yq '. |= ( with(select(.rulesets[] != null); .rulesets[] |= del(.id)) | with(select(.rulesets[] == null); .) )' -i $file
-              done
-
-              find "$src" -maxdepth 1 -type f \( -name "*.yaml" -o -name ".*.yaml" \) -print -exec mv {} "$dst" \;
-              git add "$src" "$dst"
-            else
-              echo "Source dir $src not found, skipping"
-            fi
-          done
-
           git diff --cached --quiet || {
             date_suffix=$(date +%Y-%m-%d)
-            git commit -m "Promote configs from PR #${{ github.event.pull_request.number }} on $date_suffix"
+            git commit -m "Promote configs from PR #${{ inputs.pr_number }} on $date_suffix"
             git push origin "${{ github.ref_name }}"
           }
