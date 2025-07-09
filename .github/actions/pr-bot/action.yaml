@@ -36,6 +36,6 @@ runs:
 
     - name: Create Pull Request
       shell: bash
-      run: gh pr create --title "${{ inputs.pr-title }}" --body "This is an automated PR." --base ${{ github.ref_name }} --head ${{ inputs.branch-name }} --repo gr-oss-developers/gr-oss-developers-gcss-config # TODO fix repo
+      run: gh pr create --title "${{ inputs.pr-title }}" --body "This is an automated PR." --base ${{ github.ref_name }} --head ${{ inputs.branch-name }} --repo ${{ github.repository }}
       env:
         GH_TOKEN: ${{ inputs.github-token }}
