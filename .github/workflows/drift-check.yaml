@@ -49,6 +49,12 @@ jobs:
         with:
           cli_config_credentials_token: ${{ secrets.TFC_TOKEN }}
 
+      - name: Test exit code
+        working-directory: feature/github-repo-provisioning/terraform
+        run: |
+          touch repo1.yaml
+          echo "description: This is a test" > repo1.yaml
+
       - name: Run Terraform init
         working-directory: feature/github-repo-provisioning/terraform
         run: terraform init -input=false
