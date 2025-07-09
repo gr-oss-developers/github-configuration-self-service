@@ -21,6 +21,8 @@ on:
         required: true
       gh_token:
         required: true
+      tfc_token:
+        required: true
 
 jobs:
   promote:
@@ -57,7 +59,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          cli_config_credentials_token: ${{ secrets.TFC_TOKEN }}
+          cli_config_credentials_token: ${{ secrets.tfc_token }}
 
       - name: Run Terraform init
         working-directory: feature/github-repo-provisioning
