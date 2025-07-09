@@ -33,6 +33,6 @@ runs:
 
     - name: Create Pull Request
       shell: bash
-      run: gh pr create --title "${{ inputs.pr-title }}" --body "This is an automated PR." --base ${{ github.ref_name }} --head ${{ inputs.branch-name }} --verbose # TODO verify if base branch is correct
+      run: gh pr create --title "${{ inputs.pr-title }}" --body "This is an automated PR." --base ${{ github.ref_name }} --head ${{ inputs.branch-name }} # TODO verify if base branch is correct
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
