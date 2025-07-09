@@ -50,7 +50,7 @@ jobs:
           cli_config_credentials_token: ${{ secrets.TFC_TOKEN }}
 
       - name: Test exit code
-        working-directory: feature/github-repo-provisioning/terraform
+        working-directory: feature/github-repo-provisioning/terraform/gcss_config
         run: |
           touch repo1.yaml
           echo "description: This is a test" > repo1.yaml
