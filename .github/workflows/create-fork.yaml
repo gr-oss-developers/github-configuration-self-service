@@ -12,10 +12,10 @@ on:
         description: "The name for the fork (defaults to the upstream repo name)"
         required: false
       default_branch_only:
-        type: boolean
+        type: string
         description: "Whether to fork only the default branch (true/false)"
         required: false
-        default: true
+        default: "true"
       fork_to_org:
         type: string
         description: "Select the organization to fork into"
