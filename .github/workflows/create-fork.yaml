@@ -15,7 +15,7 @@ on:
         type: boolean
         description: "Whether to fork only the default branch (true/false)"
         required: false
-        default: "true"
+        default: true
       fork_to_org:
         type: string
         description: "Select the organization to fork into"
