@@ -85,7 +85,6 @@ jobs:
           gh workflow run import.yaml \
             --repo "${{ github.repository }}" \
             --field repo_name="${{ steps.parse-upstream.outputs.fork_name }}" \
-            --field owner="${{ inputs.fork_to_org }}" \
             --ref "${{ github.ref_name }}"
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
