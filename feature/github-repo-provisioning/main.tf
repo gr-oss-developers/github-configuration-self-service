@@ -92,12 +92,6 @@ data "github_app" "app" {
   slug = split("/", each.value)[1]
 }
 
-import {
-  for_each = local.generated_repos
-  to = module.repository[each.key].github_repository.repository
-  id = each.key
-}
-
 locals {
   all_generated_collaborators = { for repo, config in local.generated_repos : repo => concat(
     try([for i in config.pull_collaborators     : { username: i,  permission = "pull"     }], []),
