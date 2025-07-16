@@ -27,20 +27,20 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - name: Generate a token
-        uses: actions/create-github-app-token@v2
-        id: generate-token
-        with:
-          app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.app_private_key }}
-          owner: "gr-oss-developers"
-
-      - name: Checkout GCSS
-        uses: actions/checkout@v4
-        with:
-          repository: gr-oss-developers/github-configuration-self-service
-          ref: ${{ inputs.gcss_ref }}
-          persist-credentials: false
+#      - name: Generate a token
+#        uses: actions/create-github-app-token@v2
+#        id: generate-token
+#        with:
+#          app-id: ${{ vars.APP_ID }}
+#          private-key: ${{ secrets.app_private_key }}
+#          owner: "gr-oss-developers"
+#
+#      - name: Checkout GCSS
+#        uses: actions/checkout@v4
+#        with:
+#          repository: gr-oss-developers/github-configuration-self-service
+#          ref: ${{ inputs.gcss_ref }}
+#          persist-credentials: false
 
       - name: Checkout configuration repo
         uses: actions/checkout@v4
@@ -49,25 +49,25 @@ jobs:
           ref: ${{ inputs.commit_sha }}
           token: ${{ secrets.gh_token }}
 
-      - name: Copy GH app mapping
-        run: cp feature/github-repo-importer/app-list.yaml feature/github-repo-provisioning/app-list.yaml
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          cli_config_credentials_token: ${{ secrets.tfc_token }}
-
-      - name: Run Terraform init
-        working-directory: feature/github-repo-provisioning
-        run: terraform init -input=false
-        env:
-          TF_CLOUD_ORGANIZATION: "GR-OSS"
-          TF_WORKSPACE: ${{ vars.WORKSPACE }}
-
-      - name: Run Terraform plan
-        id: plan
-        working-directory: feature/github-repo-provisioning
-        env:
-          TF_CLOUD_ORGANIZATION: "GR-OSS"
-          TF_WORKSPACE: ${{ vars.WORKSPACE }}
-        run: terraform plan -no-color -input=false
+#      - name: Copy GH app mapping
+#        run: cp feature/github-repo-importer/app-list.yaml feature/github-repo-provisioning/app-list.yaml
+#
+#      - name: Setup Terraform
+#        uses: hashicorp/setup-terraform@v3
+#        with:
+#          cli_config_credentials_token: ${{ secrets.tfc_token }}
+#
+#      - name: Run Terraform init
+#        working-directory: feature/github-repo-provisioning
+#        run: terraform init -input=false
+#        env:
+#          TF_CLOUD_ORGANIZATION: "GR-OSS"
+#          TF_WORKSPACE: ${{ vars.WORKSPACE }}
+#
+#      - name: Run Terraform plan
+#        id: plan
+#        working-directory: feature/github-repo-provisioning
+#        env:
+#          TF_CLOUD_ORGANIZATION: "GR-OSS"
+#          TF_WORKSPACE: ${{ vars.WORKSPACE }}
+#        run: terraform plan -no-color -input=false
