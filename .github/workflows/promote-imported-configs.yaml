@@ -31,20 +31,20 @@ jobs:
     permissions:
       contents: write
     steps:
-#      - name: Generate a token
-#        uses: actions/create-github-app-token@v2
-#        id: generate-token
-#        with:
-#          app-id: ${{ vars.APP_ID }}
-#          private-key: ${{ secrets.app_private_key }}
-#          owner: "gr-oss-developers"
-#
-#      - name: Checkout GCSS
-#        uses: actions/checkout@v4
-#        with:
-#          repository: gr-oss-developers/github-configuration-self-service
-#          ref: ${{ inputs.gcss_ref }}
-#          persist-credentials: false
+      - name: Generate a token
+        uses: actions/create-github-app-token@v2
+        id: generate-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.app_private_key }}
+          owner: "gr-oss-developers"
+
+      - name: Checkout GCSS
+        uses: actions/checkout@v4
+        with:
+          repository: gr-oss-developers/github-configuration-self-service
+          ref: ${{ inputs.gcss_ref }}
+          persist-credentials: false
 
       - name: Checkout configuration repo
         uses: actions/checkout@v4
@@ -53,68 +53,68 @@ jobs:
           ref: ${{ inputs.commit_sha }}
           token: ${{ secrets.gh_token }}
 
-#      - name: Copy GH app mapping
-#        run: cp feature/github-repo-importer/app-list.yaml feature/github-repo-provisioning/app-list.yaml
-#
-#      - name: Setup Terraform
-#        uses: hashicorp/setup-terraform@v3
-#        with:
-#          cli_config_credentials_token: ${{ secrets.tfc_token }}
-#
-#      - name: Run Terraform init
-#        working-directory: feature/github-repo-provisioning
-#        run: terraform init -input=false
-#        env:
-#          TF_CLOUD_ORGANIZATION: "GR-OSS"
-#          TF_WORKSPACE: ${{ vars.WORKSPACE }}
-#
-#      - name: Run Terraform plan
-#        id: plan
-#        working-directory: feature/github-repo-provisioning
-#        env:
-#          TF_CLOUD_ORGANIZATION: "GR-OSS"
-#          TF_WORKSPACE: ${{ vars.WORKSPACE }}
-#        run: terraform plan -no-color -input=false -detailed-exitcode
-#
-#      - name: Run Terraform apply
-#        if: steps.plan.outputs.exitcode == '2'
-#        working-directory: feature/github-repo-provisioning
-#        env:
-#          TF_CLOUD_ORGANIZATION: "GR-OSS"
-#          TF_WORKSPACE: ${{ vars.WORKSPACE }}
-#        run: terraform apply -no-color -input=false -auto-approve
-#
-#      - name: Configure git
-#        run: |
-#          git config --global user.name 'github-actions[bot]'
-#          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-#
-#      - name: Checkout target branch
-#        working-directory: feature/github-repo-provisioning/gcss_config
-#        run: git checkout -B "${{ github.ref_name }}"
-#
-#      - name: Promote Sanitized Files
-#        working-directory: feature/github-repo-provisioning/gcss_config
-#        run: |
-#          src="importer_tmp_dir"
-#          dst="."
-#
-#          if [[ -d "$src" ]]; then
-#            echo "Promoting configs from $src to $dst"
-#            mkdir -p "$dst"
-#
-#            find "$src" -type f -name '*.yaml' | while read file; do
-#              yq '. |= ( with(select(.rulesets[] != null); .rulesets[] |= del(.id)) | with(select(.rulesets[] == null); .) )' -i $file
-#            done
-#
-#            find "$src" -maxdepth 1 -type f \( -name "*.yaml" -o -name ".*.yaml" \) -print -exec mv {} "$dst" \;
-#            git add "$src" "$dst"
-#          else
-#            echo "Source dir $src not found, skipping"
-#          fi
-#
-#          git diff --cached --quiet || {
-#            date_suffix=$(date +%Y-%m-%d)
-#            git commit -m "Promote configs from PR #${{ inputs.pr_number }} on $date_suffix"
-#            git push origin "${{ github.ref_name }}"
-#          }
+      - name: Copy GH app mapping
+        run: cp feature/github-repo-importer/app-list.yaml feature/github-repo-provisioning/app-list.yaml
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          cli_config_credentials_token: ${{ secrets.tfc_token }}
+
+      - name: Run Terraform init
+        working-directory: feature/github-repo-provisioning
+        run: terraform init -input=false
+        env:
+          TF_CLOUD_ORGANIZATION: "GR-OSS"
+          TF_WORKSPACE: ${{ vars.WORKSPACE }}
+
+      - name: Run Terraform plan
+        id: plan
+        working-directory: feature/github-repo-provisioning
+        env:
+          TF_CLOUD_ORGANIZATION: "GR-OSS"
+          TF_WORKSPACE: ${{ vars.WORKSPACE }}
+        run: terraform plan -no-color -input=false -detailed-exitcode
+
+      - name: Run Terraform apply
+        if: steps.plan.outputs.exitcode == '2'
+        working-directory: feature/github-repo-provisioning
+        env:
+          TF_CLOUD_ORGANIZATION: "GR-OSS"
+          TF_WORKSPACE: ${{ vars.WORKSPACE }}
+        run: terraform apply -no-color -input=false -auto-approve
+
+      - name: Configure git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Checkout target branch
+        working-directory: feature/github-repo-provisioning/gcss_config
+        run: git checkout -B "${{ github.ref_name }}"
+
+      - name: Promote Sanitized Files
+        working-directory: feature/github-repo-provisioning/gcss_config
+        run: |
+          src="importer_tmp_dir"
+          dst="."
+        
+          if [[ -d "$src" ]]; then
+            echo "Promoting configs from $src to $dst"
+            mkdir -p "$dst"
+        
+            find "$src" -type f -name '*.yaml' | while read file; do
+              yq '. |= ( with(select(.rulesets[] != null); .rulesets[] |= del(.id)) | with(select(.rulesets[] == null); .) )' -i $file
+            done
+
+            find "$src" -maxdepth 1 -type f \( -name "*.yaml" -o -name ".*.yaml" \) -print -exec mv {} "$dst" \;
+            git add "$src" "$dst"
+          else
+            echo "Source dir $src not found, skipping"
+          fi
+          
+          git diff --cached --quiet || {
+            date_suffix=$(date +%Y-%m-%d)
+            git commit -m "Promote configs from PR #${{ inputs.pr_number }} on $date_suffix"
+            git push origin "${{ github.ref_name }}"
+          }
