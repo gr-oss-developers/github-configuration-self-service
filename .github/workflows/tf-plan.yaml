@@ -44,8 +44,9 @@ jobs:
       - name: Debug
         env:
           TOKEN: ${{ secrets.gh_token }}
+          SHA: ${{ inputs.commit_sha }}
         run: |
-          curl -H "Authorization: token $TOKEN" https://api.github.com/repos/gr-oss-developers/gr-oss-developers-gcss-config
+          curl -H "Authorization: token $TOKEN" https://api.github.com/repos/gr-oss-developers/gr-oss-developers-gcss-config/commits/$SHA
 
       - name: Checkout configuration repo
         uses: actions/checkout@v4
