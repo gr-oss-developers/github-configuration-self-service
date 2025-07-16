@@ -41,6 +41,11 @@ jobs:
 #          repository: gr-oss-developers/github-configuration-self-service
 #          ref: ${{ inputs.gcss_ref }}
 #          persist-credentials: false
+      - name: Debug
+        env:
+          TOKEN: ${{ secrets.gh_token }}
+        run: |
+          curl -H "Authorization: token $TOKEN" https://api.github.com/repos/gr-oss-developers/gr-oss-developers-gcss-config
 
       - name: Checkout configuration repo
         uses: actions/checkout@v4
