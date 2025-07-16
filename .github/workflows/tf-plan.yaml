@@ -26,6 +26,7 @@ jobs:
     environment: promote
     permissions:
       pull-requests: write
+      contents: read
     steps:
 #      - name: Generate a token
 #        uses: actions/create-github-app-token@v2
