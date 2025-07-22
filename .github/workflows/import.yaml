@@ -57,14 +57,6 @@ jobs:
         with:
           just-version: '1.4.0'
 
-      - name: Generate a token
-        uses: actions/create-github-app-token@v1
-        id: generate-token
-        with:
-          app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.app_private_key }}
-          owner: ${{ inputs.owner }}
-
       - name: Setup vars
         id: setup-vars
         run: |
