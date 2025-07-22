@@ -15,8 +15,6 @@ on:
     secrets:
       app_private_key:
         required: true
-      gh_token:
-        required: true
 
 jobs:
   bulk-import-repos:
@@ -27,6 +25,14 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      - name: Generate a token
+        uses: actions/create-github-app-token@v1
+        id: generate-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.app_private_key }}
+          owner: ${{ inputs.owner }}
+
       - name: Checkout GCSS
         uses: actions/checkout@v4
         with:
@@ -39,7 +45,7 @@ jobs:
         with:
           path: feature/github-repo-provisioning/gcss_config
           ref: ${{ github.sha }}
-          token: ${{ secrets.gh_token }}
+          token: ${{ steps.generate-token.outputs.token }}
 
       - name: Copy importer config
         run: |
@@ -50,14 +56,6 @@ jobs:
         uses: extractions/setup-just@v2
         with:
           just-version: '1.4.0'
-
-      - name: Generate a token
-        uses: actions/create-github-app-token@v1
-        id: generate-token
-        with:
-          app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.app_private_key }}
-          owner: ${{ inputs.owner }}
 
       - name: Setup vars
         id: setup-vars
@@ -85,4 +83,4 @@ jobs:
           branch-name: ${{ steps.setup-vars.outputs.automation_branch_name }}
           pr-title: "Bulk import repos"
           commit-message: "Auto-generated changes. Bulk import repos"
-          github-token: ${{ secrets.gh_token }}
+          github-token: ${{ steps.generate-token.outputs.token }}
