@@ -41,6 +41,7 @@ feature/github-repo-provisioning/.terraform.lock.hcl
 feature/github-repo-provisioning/.terraform
 feature/github-repo-provisioning/.terraform/*
 feature/github-repo-provisioning/app-list.yaml
+feature/github-repo-provisioning/import-config.yaml
 
 feature/github-repo-importer/dumps/*
 feature/github-repo-importer/configs/*
