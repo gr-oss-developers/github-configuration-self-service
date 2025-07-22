@@ -44,6 +44,7 @@ jobs:
       - name: Copy importer config
         run: |
           cp feature/github-repo-provisioning/gcss_config/config/app-list.yaml feature/github-repo-importer/app-list.yaml
+          cp feature/github-repo-provisioning/gcss_config/config/app-list.yaml feature/github-repo-provisioning/app-list.yaml
           cp feature/github-repo-provisioning/gcss_config/config/import-config.yaml feature/github-repo-importer/import-config.yaml
 
       - name: Setup Terraform
