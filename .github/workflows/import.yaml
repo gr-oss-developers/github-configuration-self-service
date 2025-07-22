@@ -52,6 +52,11 @@ jobs:
           ref: ${{ github.sha }}
           token: ${{ steps.generate-token.outputs.token }}
 
+      - name: Copy importer config
+        run: |
+          cp feature/github-repo-provisioning/gcss_config/config/app-list.yaml feature/github-repo-importer/app-list.yaml
+          cp feature/github-repo-provisioning/gcss_config/config/import-config.yaml feature/github-repo-importer/import-config.yaml
+
       - name: Setup Just
         uses: extractions/setup-just@v2
         with:
@@ -62,13 +67,7 @@ jobs:
         run: |
           date_suffix=$(date +%Y%m%d)
           echo "full_repo_name=${{ inputs.owner }}/${{ inputs.repo_name }}" >> $GITHUB_OUTPUT
-          echo "automation_branch_name=import/${{ inputs.owner }}/${{ inputs.repo_name }}/$date_suffix" >> $GITHUB_OUTPUT
-
-      - name: Copy importer config
-        run: |
-          cp feature/github-repo-provisioning/gcss_config/config/app-list.yaml feature/github-repo-importer/app-list.yaml
-          cp feature/github-repo-provisioning/gcss_config/config/import-config.yaml feature/github-repo-importer/import-config.yaml
-          
+          echo "automation_branch_name=import/${{ inputs.owner }}/${{ inputs.repo_name }}/$date_suffix" >> $GITHUB_OUTPUT    
 
       - name: Import repo
         working-directory: feature/github-repo-importer

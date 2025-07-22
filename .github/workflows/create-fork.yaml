@@ -41,11 +41,6 @@ jobs:
           private-key: ${{ secrets.app_private_key }}
           owner: ${{ inputs.fork_to_org }}
 
-#      - name: Checkout repository
-#        uses: actions/checkout@v4
-#        with:
-#          token: ${{ steps.generate-token.outputs.token }}
-
       - name: Parse and validate input
         id: parse-upstream
         uses: actions/github-script@v7
