@@ -19,8 +19,6 @@ on:
     secrets:
       app_private_key:
           required: true
-      gh_token:
-          required: true
 
 permissions:
   contents: write
@@ -52,7 +50,6 @@ jobs:
         with:
           path: feature/github-repo-provisioning/gcss_config
           ref: ${{ github.sha }}
-#          token: ${{ secrets.gh_token }}
           token: ${{ steps.generate-token.outputs.token }}
 
       - name: Setup Just
@@ -60,13 +57,13 @@ jobs:
         with:
           just-version: '1.4.0'
 
-#      - name: Generate a token
-#        uses: actions/create-github-app-token@v1
-#        id: generate-token
-#        with:
-#          app-id: ${{ vars.APP_ID }}
-#          private-key: ${{ secrets.app_private_key }}
-#          owner: ${{ inputs.owner }}
+      - name: Generate a token
+        uses: actions/create-github-app-token@v1
+        id: generate-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.app_private_key }}
+          owner: ${{ inputs.owner }}
 
       - name: Setup vars
         id: setup-vars
@@ -94,5 +91,4 @@ jobs:
           branch-name: ${{ steps.setup-vars.outputs.automation_branch_name }}
           pr-title: "Import ${{ steps.setup-vars.outputs.full_repo_name }}"
           commit-message: "Auto-generated changes. Import ${{ steps.setup-vars.outputs.full_repo_name }} repository"
-#          github-token: ${{ secrets.gh_token }}
           github-token: ${{ steps.generate-token.outputs.token }}
