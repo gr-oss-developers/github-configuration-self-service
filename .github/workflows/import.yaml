@@ -32,7 +32,7 @@ jobs:
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.app_private_key }}
-          owner: ${{ github.repository.owner.login }}
+          owner: ${{ github.repository_owner }}
 
       - name: Checkout GCSS
         uses: actions/checkout@v4
@@ -62,8 +62,8 @@ jobs:
         id: setup-vars
         run: |
           date_suffix=$(date +%Y%m%d)
-          echo "full_repo_name=${{ github.repository.owner.login }}/${{ inputs.repo_name }}" >> $GITHUB_OUTPUT
-          echo "automation_branch_name=import/${{ github.repository.owner.login }}/${{ inputs.repo_name }}/$date_suffix" >> $GITHUB_OUTPUT    
+          echo "full_repo_name=${{ github.repository_owner }}/${{ inputs.repo_name }}" >> $GITHUB_OUTPUT
+          echo "automation_branch_name=import/${{ github.repository_owner }}/${{ inputs.repo_name }}/$date_suffix" >> $GITHUB_OUTPUT    
 
       - name: Import repo
         working-directory: feature/github-repo-importer
