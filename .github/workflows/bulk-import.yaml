@@ -33,8 +33,10 @@ jobs:
           private-key: ${{ secrets.app_private_key }}
           owner: ${{ inputs.owner }}
 
-      - name: Print context
-        run: ${{ fromJSON(github) }}
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
 
       - name: Checkout GCSS
         uses: actions/checkout@v4
