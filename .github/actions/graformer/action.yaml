@@ -16,7 +16,7 @@ runs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
       with:
-        cli_config_credentials_token: ${{ inputs.tfc_token }}
+        cli_config_credentials_token: ${{ inputs.tfc-token }}
 
     - name: Terraform fmt
       id: fmt
