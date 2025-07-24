@@ -46,18 +46,11 @@ jobs:
           ref: ${{ inputs.gcss_ref }}
           persist-credentials: false
 
-      - name: Checkout configuration repo
-        uses: actions/checkout@v4
+      - name: GCSS config setup
+        uses: ./.github/actions/gcss-config-setup
         with:
-          path: feature/github-repo-provisioning/gcss_config
-          ref: ${{ inputs.commit_sha }}
-          token: ${{ secrets.gh_token }}
-
-      - name: Copy importer config
-        run: |
-          cp feature/github-repo-provisioning/gcss_config/config/app-list.yaml feature/github-repo-importer/app-list.yaml
-          cp feature/github-repo-provisioning/gcss_config/config/app-list.yaml feature/github-repo-provisioning/app-list.yaml
-          cp feature/github-repo-provisioning/gcss_config/config/import-config.yaml feature/github-repo-importer/import-config.yaml
+          checkout-sha: ${{ inputs.commit_sha }}
+          checkout-token: ${{ secrets.gh_token }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3

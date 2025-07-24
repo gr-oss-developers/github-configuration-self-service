@@ -36,17 +36,11 @@ jobs:
           ref: ${{ inputs.gcss_ref }}
           persist-credentials: false
 
-      - name: Checkout configuration repo
-        uses: actions/checkout@v4
+      - name: GCSS config setup
+        uses: ./.github/actions/gcss-config-setup
         with:
-          path: feature/github-repo-provisioning/gcss_config
-          ref: ${{ github.sha }}
-          token: ${{ steps.generate-token.outputs.token }}
-
-      - name: Copy importer config
-        run: |
-          cp feature/github-repo-provisioning/gcss_config/config/app-list.yaml feature/github-repo-importer/app-list.yaml
-          cp feature/github-repo-provisioning/gcss_config/config/import-config.yaml feature/github-repo-importer/import-config.yaml
+          checkout-sha: ${{ github.sha }}
+          checkout-token: ${{ steps.generate-token.outputs.token }}
 
       - name: Setup Just
         uses: extractions/setup-just@v2
