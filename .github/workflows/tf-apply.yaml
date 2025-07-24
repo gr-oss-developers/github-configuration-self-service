@@ -39,35 +39,12 @@ jobs:
           checkout-sha: ${{ inputs.commit_sha }}
           checkout-token: ${{ secrets.gh_token }}
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+      - name: Setup terraform and run plan
+        uses: ./.github/actions/graformer
         with:
-          cli_config_credentials_token: ${{ secrets.tfc_token }}
-
-      - name: Terraform fmt
-        id: fmt
-        run: terraform fmt -check
-        continue-on-error: true
-
-      - name: Run Terraform init
-        working-directory: feature/github-repo-provisioning
-        id: init
-        run: terraform init -input=false
-        env:
-          TF_CLOUD_ORGANIZATION: "GR-OSS"
-          TF_WORKSPACE: ${{ vars.WORKSPACE }}
-
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
-
-      - name: Run Terraform plan
-        id: plan
-        working-directory: feature/github-repo-provisioning
-        env:
-          TF_CLOUD_ORGANIZATION: "GR-OSS"
-          TF_WORKSPACE: ${{ vars.WORKSPACE }}
-        run: terraform plan -no-color -input=false -detailed-exitcode
+          tfc-token: ${{ secrets.tfc_token }}
+          tfc-organization: "GR-OSS"
+          tfc-workspace: ${{ vars.WORKSPACE }}
 
       - name: Run Terraform apply
         if: steps.plan.outputs.exitcode == '2'

@@ -28,25 +28,12 @@ jobs:
           checkout-sha: ${{ github.sha }}
           checkout-token: ${{ github.token }}
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+      - name: Setup terraform and run plan
+        uses: ./.github/actions/graformer
         with:
-          cli_config_credentials_token: ${{ secrets.TFC_TOKEN }}
-
-      - name: Run Terraform init
-        working-directory: feature/github-repo-provisioning
-        run: terraform init -input=false
-        env:
-          TF_CLOUD_ORGANIZATION: "GR-OSS"
-          TF_WORKSPACE: ${{ vars.WORKSPACE }}
-
-      - name: Run Terraform plan
-        id: plan
-        working-directory: feature/github-repo-provisioning
-        env:
-          TF_CLOUD_ORGANIZATION: "GR-OSS"
-          TF_WORKSPACE: ${{ vars.WORKSPACE }}
-        run: terraform plan -no-color -input=false -detailed-exitcode
+          tfc-token: ${{ secrets.TFC_TOKEN }}
+          tfc-organization: "GR-OSS"
+          tfc-workspace: ${{ vars.WORKSPACE }}
 
         # 0 for green plan no changes, 2 for green plan with changes
       - name: Inspect drift
