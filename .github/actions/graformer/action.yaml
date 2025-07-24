@@ -19,16 +19,16 @@ outputs:
     value: ${{ steps.plan.outputs.stdout }}
   fmt-outcome:
     description: "formatting outcome"
-    value: ${{ steps.fmt.outputs.outcome }}
+    value: ${{ steps.fmt.outcome }}
   init-outcome:
     description: "init outcome"
-    value: ${{ steps.init.outputs.outcome }}
+    value: ${{ steps.init.outcome }}
   validate-outcome:
     description: "validation outcome"
-    value: ${{ steps.validate.outputs.outcome }}
+    value: ${{ steps.validate.outcome }}
   plan-outcome:
     description: "Plan outcome"
-    value: ${{ steps.plan.outputs.outcome }}
+    value: ${{ steps.plan.outcome }}
   validate-stdout:
     description: "validate stdout"
     value: ${{ steps.validate.outputs.stdout }}
