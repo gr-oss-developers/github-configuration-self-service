@@ -8,10 +8,6 @@ on:
         description: "GCSS ref to checkout"
         required: false
         default: "main"
-      owner:
-        type: string
-        description: 'The owner of the repository to import'
-        required: true
     secrets:
       app_private_key:
         required: true
@@ -31,12 +27,7 @@ jobs:
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.app_private_key }}
-          owner: ${{ inputs.owner }}
-
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
+          owner: ${{ github.repository.owner.login }}
 
       - name: Checkout GCSS
         uses: actions/checkout@v4
@@ -66,14 +57,14 @@ jobs:
         id: setup-vars
         run: |
           date_suffix=$(date +%Y%m%d)
-          echo "automation_branch_name=import/${{ github.ref_name }}/${{ inputs.owner }}/bulk-import/$date_suffix" >> $GITHUB_OUTPUT
+          echo "automation_branch_name=import/${{ github.ref_name }}/${{ github.repository.owner.login }}/bulk-import/$date_suffix" >> $GITHUB_OUTPUT
 
       - name: Bulk import repos
         working-directory: feature/github-repo-importer
         run: just import-repos
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
-          OWNER: ${{ inputs.owner }}
+          OWNER: ${{ github.repository.owner.login }}
 
       - name: Handle configuration files
         uses: ./.github/actions/compare

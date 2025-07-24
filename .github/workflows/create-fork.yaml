@@ -16,10 +16,6 @@ on:
         description: "Whether to fork only the default branch (true/false)"
         required: false
         default: "true"
-      fork_to_org:
-        type: string
-        description: "Select the organization to fork into"
-        required: true
     secrets:
       app_private_key:
         required: true
@@ -39,7 +35,7 @@ jobs:
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.app_private_key }}
-          owner: ${{ inputs.fork_to_org }}
+          owner: ${{ github.repository.owner.login }}
 
       - name: Parse and validate input
         id: parse-upstream
@@ -70,7 +66,7 @@ jobs:
           gh repo fork ${{ inputs.upstream_repo }} \
           --default-branch-only=${{ inputs.default_branch_only }} \
           --fork-name=${{ steps.parse-upstream.outputs.fork_name }} \
-          --org=${{ inputs.fork_to_org }} \
+          --org=${{ github.repository.owner.login }} \
           --clone=false
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}

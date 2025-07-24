@@ -7,10 +7,6 @@ on:
         type: string
         description: 'The name of the repository to import'
         required: true
-      owner:
-        type: string
-        description: 'The owner of the repository to import'
-        required: true
       gcss_ref:
         type: string
         description: "GCSS ref to checkout"
@@ -36,7 +32,7 @@ jobs:
         with:
           app-id: ${{ vars.APP_ID }}
           private-key: ${{ secrets.app_private_key }}
-          owner: ${{ inputs.owner }}
+          owner: ${{ github.repository.owner.login }}
 
       - name: Checkout GCSS
         uses: actions/checkout@v4
@@ -66,8 +62,8 @@ jobs:
         id: setup-vars
         run: |
           date_suffix=$(date +%Y%m%d)
-          echo "full_repo_name=${{ inputs.owner }}/${{ inputs.repo_name }}" >> $GITHUB_OUTPUT
-          echo "automation_branch_name=import/${{ inputs.owner }}/${{ inputs.repo_name }}/$date_suffix" >> $GITHUB_OUTPUT    
+          echo "full_repo_name=${{ github.repository.owner.login }}/${{ inputs.repo_name }}" >> $GITHUB_OUTPUT
+          echo "automation_branch_name=import/${{ github.repository.owner.login }}/${{ inputs.repo_name }}/$date_suffix" >> $GITHUB_OUTPUT    
 
       - name: Import repo
         working-directory: feature/github-repo-importer

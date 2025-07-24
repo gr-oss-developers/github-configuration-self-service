@@ -39,7 +39,7 @@ jobs:
           path: feature/github-repo-provisioning/gcss_config
           ref: ${{ inputs.commit_sha }}
           token: ${{ secrets.gh_token }}
-          repository: gr-oss-developers/gr-oss-developers-gcss-config
+#          repository: gr-oss-developers/gr-oss-developers-gcss-config
 
       - name: Copy importer config
         run: |
