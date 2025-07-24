@@ -20,12 +20,14 @@ runs:
 
     - name: Terraform fmt
       id: fmt
+      shell: bash
       run: terraform fmt -check
       continue-on-error: true
 
     - name: Run Terraform init
       working-directory: feature/github-repo-provisioning
       id: init
+      shell: bash
       run: terraform init -input=false
       env:
         TF_CLOUD_ORGANIZATION: ${{ inputs.tfc-organization }}
@@ -33,10 +35,12 @@ runs:
 
     - name: Terraform Validate
       id: validate
+      shell: bash
       run: terraform validate -no-color
 
     - name: Run Terraform plan
       id: plan
+      shell: bash
       working-directory: feature/github-repo-provisioning
       env:
         TF_CLOUD_ORGANIZATION: ${{ inputs.tfc-organization }}
