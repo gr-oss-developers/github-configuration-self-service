@@ -29,6 +29,7 @@ jobs:
           checkout-token: ${{ github.token }}
 
       - name: Setup terraform and run plan
+        id: graformer
         uses: ./.github/actions/graformer
         with:
           tfc-token: ${{ secrets.TFC_TOKEN }}
@@ -38,7 +39,7 @@ jobs:
         # 0 for green plan no changes, 2 for green plan with changes
       - name: Inspect drift
         run: |
-          if [[ "${{ steps.plan.outputs.exitcode }}" == 2 ]]; then
+          if [[ "${{ steps.graformer.outputs.exitcode }}" == 2 ]]; then
             echo "Drift detected!"
             exit 1
           else

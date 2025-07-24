@@ -53,6 +53,7 @@ jobs:
           checkout-token: ${{ secrets.gh_token }}
 
       - name: Setup terraform and run plan
+        id: graformer
         uses: ./.github/actions/graformer
         with:
           tfc-token: ${{ secrets.tfc_token }}
