@@ -39,7 +39,7 @@ jobs:
         # 0 for green plan no changes, 2 for green plan with changes
       - name: Inspect drift
         run: |
-          if [[ "${{ steps.graformer.outputs.exitcode }}" == 2 ]]; then
+          if [[ "${{ steps.graformer.outputs.plan-exitcode }}" == 2 ]]; then
             echo "Drift detected!"
             exit 1
           else

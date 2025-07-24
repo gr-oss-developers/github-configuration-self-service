@@ -41,13 +41,14 @@ jobs:
 
       - name: Setup terraform and run plan
         uses: ./.github/actions/graformer
+        id: graformer
         with:
           tfc-token: ${{ secrets.tfc_token }}
           tfc-organization: "GR-OSS"
           tfc-workspace: ${{ vars.WORKSPACE }}
 
       - name: Run Terraform apply
-        if: steps.plan.outputs.exitcode == '2'
+        if: steps.graformer.outputs.plan-exitcode == '2'
         working-directory: feature/github-repo-provisioning
         env:
           TF_CLOUD_ORGANIZATION: "GR-OSS"

@@ -11,9 +11,27 @@ inputs:
     description: "HCP cloud workspace name"
     required: true
 outputs:
-  exitcode:
-    description: "Random number"
+  plan-exitcode:
+    description: "Plan detailed exit code (0 - success, empty diff; 1 - error; 2 - success, non-empty diff)"
     value: ${{ steps.plan.outputs.exitcode }}
+  plan-stdout:
+    description: "plan stdout"
+    value: ${{ steps.plan.outputs.stdout }}
+  fmt-outcome:
+    description: "formatting outcome"
+    value: ${{ steps.fmt.outputs.outcome }}
+  init-outcome:
+    description: "init outcome"
+    value: ${{ steps.init.outputs.outcome }}
+  validate-outcome:
+    description: "validation outcome"
+    value: ${{ steps.validate.outputs.outcome }}
+  plan-outcome:
+    description: "Plan outcome"
+    value: ${{ steps.plan.outputs.outcome }}
+  validate-stdout:
+    description: "validate stdout"
+    value: ${{ steps.validate.outputs.stdout }}
 runs:
   using: "composite"
   steps:

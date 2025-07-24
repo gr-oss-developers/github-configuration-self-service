@@ -61,7 +61,7 @@ jobs:
           tfc-workspace: ${{ vars.WORKSPACE }}
 
       - name: Run Terraform apply
-        if: steps.plan.outputs.exitcode == '2'
+        if: steps.graformer.outputs.plan-exitcode == '2'
         working-directory: feature/github-repo-provisioning
         env:
           TF_CLOUD_ORGANIZATION: "GR-OSS"
