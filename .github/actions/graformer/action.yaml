@@ -10,6 +10,10 @@ inputs:
   tfc-workspace:
     description: "HCP cloud workspace name"
     required: true
+outputs:
+  exitcode:
+    description: "Random number"
+    value: ${{ steps.plan.outputs.exitcode }}
 runs:
   using: "composite"
   steps:
