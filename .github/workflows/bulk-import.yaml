@@ -33,6 +33,9 @@ jobs:
           private-key: ${{ secrets.app_private_key }}
           owner: ${{ inputs.owner }}
 
+      - name: Print context
+        run: ${{ fromJSON(github) }}
+
       - name: Checkout GCSS
         uses: actions/checkout@v4
         with:
