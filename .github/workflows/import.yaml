@@ -34,6 +34,9 @@ jobs:
           private-key: ${{ secrets.app_private_key }}
           owner: ${{ github.repository_owner }}
 
+      - name: Just echo
+        run: echo "just echo"
+
       - name: Checkout GCSS
         uses: actions/checkout@v4
         with:
