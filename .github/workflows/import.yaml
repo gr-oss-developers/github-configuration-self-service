@@ -27,7 +27,7 @@ jobs:
     environment: import
     steps:
       - name: Generate a token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@v2
         id: generate-token
         with:
           app-id: ${{ vars.APP_ID }}
@@ -48,7 +48,7 @@ jobs:
           checkout-token: ${{ steps.generate-token.outputs.token }}
 
       - name: Setup Just
-        uses: extractions/setup-just@v2
+        uses: extractions/setup-just@v3
         with:
           just-version: '1.4.0'
 
